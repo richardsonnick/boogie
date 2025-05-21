@@ -2,10 +2,28 @@
 
 #include <util/utils.h>
 
-TEST(UtilsTest, SanityTest) {
+TEST(UtilsTest, SHA1PadTest) {
     std::string message = "abc";
     Buffer buf = utils::to_buffer(message);
     utils::sha1_pad(buf);
 
-    EXPECT_EQ(buf.size(), 512 / 8);
+    EXPECT_EQ(buf.size() % (512 / 8), 0); // length should be blocks of 512 bits
+
+    // Check message
+    for (int i = 0; i < message.size(); i++) {
+        EXPECT_EQ(buf[i], message[i]);
+    }
+
+    // Zero pad
+    for (int i = message.size() + 1; i < buf.size() - (64 / 8); i++) {
+        EXPECT_EQ(buf[i], 0x00);
+    }
+
+    // Check length
+    uint64_t len = 0;
+    for (int i = buf.size() - 4; i < buf.size(); i++) {
+        len <<= 8;
+        len |= buf[i];
+    }
+    EXPECT_EQ(len, message.size() * 8);
 }
