@@ -13,7 +13,7 @@ set(CMAKE_LINKER_FLAGS "${CMAKE_LINKER_FLAGS} -fsanitize=address")
 set(CTEST_OUTPUT_ON_FAILURE ON)
 
 add_executable(boogie
-  src/Main.cpp
+  src/main.cpp
 )
 
 target_include_directories(boogie PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src)
@@ -22,24 +22,21 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
 target_compile_options(boogie PRIVATE -Wall -Wextra -Wpedantic)
 
-# enable_testing()
-# find_package(GTest REQUIRED)
-# add_executable(tokenizer_tests
-#   test/JsonTest.cpp
-#   test/TokenizerStateTest.cpp
-#   test/TokenizerTest.cpp
-#   src/Tokenizer.cpp
-# )
-# target_include_directories(tokenizer_tests PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src)
+enable_testing()
+find_package(GTest REQUIRED)
+add_executable(boogie_tests
+  test/utils_test.cpp
+)
+target_include_directories(boogie_tests PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src)
 
-# target_link_libraries(tokenizer_tests
-#   PRIVATE
-#   GTest::gtest
-#   GTest::gtest_main
-#   pthread
-# )
+target_link_libraries(boogie_tests
+  PRIVATE
+  GTest::gtest
+  GTest::gtest_main
+  pthread
+)
 
-# include(GoogleTest)
-# gtest_discover_tests(tokenizer_tests)
+include(GoogleTest)
+gtest_discover_tests(boogie_tests)
 
-# install(TARGETS boogie DESTINATION bin)
+install(TARGETS boogie DESTINATION bin)
