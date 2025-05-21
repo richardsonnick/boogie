@@ -12,13 +12,14 @@ set(CMAKE_LINKER_FLAGS "${CMAKE_LINKER_FLAGS} -fsanitize=address")
 
 set(CTEST_OUTPUT_ON_FAILURE ON)
 
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+
 add_executable(boogie
   src/main.cpp
 )
 
 target_include_directories(boogie PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src)
 
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
 target_compile_options(boogie PRIVATE -Wall -Wextra -Wpedantic)
 
