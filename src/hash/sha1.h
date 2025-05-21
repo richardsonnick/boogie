@@ -4,7 +4,7 @@
 
 namespace hash::sha1 {
     std::string hash(const std::string& message) {
-        Buffer buf = utils::toBuffer(message);
+        Buffer buf = utils::to_buffer(message);
         return "hello!";
     }
 }
