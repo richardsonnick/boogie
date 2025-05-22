@@ -38,7 +38,7 @@ FetchContent_MakeAvailable(googletest)
 enable_testing()
 
 add_executable(boogie_tests
-  test/utils_test.cpp
+  test/sha1_test.cpp
 )
 
 target_include_directories(boogie_tests
