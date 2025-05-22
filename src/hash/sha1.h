@@ -25,7 +25,7 @@ namespace hash::sha1 {
          *    A single word buffer TEMP is also employed.
          */
         std::array<uint32_t, 5> b1 = {0x0,0x0,0x0,0x0,0x0};
-        std::array<uint32_t, 5> b2 = {0x67452301, 0xEFCDAB89, 0x98BADCFE, 0x10325476, 0xC3D2E1F0};
+        std::array<uint32_t, 5> H = {0x67452301, 0xEFCDAB89, 0x98BADCFE, 0x10325476, 0xC3D2E1F0};
         std::array<uint32_t, 80> w;
         std::vector<uint32_t> temp;
 
@@ -113,7 +113,5 @@ namespace hash::sha1 {
         Buffer buf = utils::to_buffer(message);
         return "Not implemented...";
     }
-
-
 
 }

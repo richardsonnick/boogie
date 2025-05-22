@@ -15,7 +15,7 @@ TEST(SHA1Tests, MakeContextTest) {
     for (auto elem : gotContext->b1) {
         EXPECT_EQ(elem, 0x0);
     }
-    EXPECT_EQ(gotContext->b2.size(), 5);
+    EXPECT_EQ(gotContext->H.size(), 5);
     EXPECT_EQ(gotContext->w.size(), 80);
 }
 
