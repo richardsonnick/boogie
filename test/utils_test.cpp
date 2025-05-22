@@ -1,6 +1,7 @@
 #include <gtest/gtest.h>
 
 #include <util/utils.h>
+#include <test/assets/words.h>
 
 class UtilsPaddingTest
   : public ::testing::TestWithParam<std::string> {};
@@ -33,9 +34,5 @@ TEST_P(UtilsPaddingTest, SHA1PadTest) {
 
 INSTANTIATE_TEST_SUITE_P(
     UtilsPaddingTests,  UtilsPaddingTest,
-    ::testing::Values(
-        "abc",
-        "a",
-        "hello, world!"
-    )
+    ::testing::ValuesIn(testing::test_vector)
 );

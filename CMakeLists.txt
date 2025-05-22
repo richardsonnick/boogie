@@ -40,7 +40,12 @@ enable_testing()
 add_executable(boogie_tests
   test/utils_test.cpp
 )
-target_include_directories(boogie_tests PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src)
+
+target_include_directories(boogie_tests
+  PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}/src
+    ${CMAKE_CURRENT_SOURCE_DIR}
+)
 
 target_link_libraries(boogie_tests
   PRIVATE
