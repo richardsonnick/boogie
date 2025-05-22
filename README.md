@@ -1,3 +1,7 @@
+<div align="center">
+  <img src="https://media.tenor.com/5YSoSYGxbUMAAAAM/dancing-skeleton.gif" alt="Dancing Skeleton GIF" />
+</div>
+
 # boogie
 A somewhat correct/somewhat secure crypto library.
 
@@ -43,5 +47,6 @@ make install
 * Sha1 RFC: https://www.ietf.org/rfc/rfc3174.txt
 
 <div align="center">
-  <img src="https://media.tenor.com/5YSoSYGxbUMAAAAM/dancing-skeleton.gif" alt="Dancing Skeleton GIF" />
+  <a href="https://imgflip.com/i/9uw4fc"><img src="https://i.imgflip.com/9uw4fc.jpg" title="made at imgflip.com"/></a><div><a href="https://imgflip.com/memegenerator"></a></div>
 </div>
+
