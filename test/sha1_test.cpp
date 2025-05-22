@@ -5,7 +5,7 @@
 
 using namespace hash;
 class SHA1Tests
-  : public ::testing::TestWithParam<std::string> {};
+  : public ::testing::TestWithParam<std::pair<std::string,std::string>> {};
 
 TEST(SHA1Tests, MakeContextTest) {
     const std::string& message = "I need context!";
@@ -34,7 +34,7 @@ TEST(SHA1Tests, DigestAtTest) {
 }
 
 TEST_P(SHA1Tests, SHA1PadTest) {
-    const std::string& message = GetParam();
+    const std::string& message = GetParam().first;
     Buffer buf = utils::to_buffer(message);
     sha1::sha1_pad(buf);
 
@@ -62,7 +62,7 @@ TEST_P(SHA1Tests, SHA1PadTest) {
 }
 
 TEST_P(SHA1Tests, ToMessageDigestBufferTest) {
-    const std::string& message = GetParam();
+    const std::string& message = GetParam().first;
     Buffer buf = utils::to_buffer(message);
     sha1::sha1_pad(buf); 
     auto got_buffer = sha1::toMessageDigestBuffer(buf);
