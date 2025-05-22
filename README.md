@@ -30,6 +30,7 @@ cmake ..
 # Or use the following to enable debug symbols:
 cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug
 make
+# Places binary at boogie/build/bin/boogie
 
 # Run tests
 ctest
