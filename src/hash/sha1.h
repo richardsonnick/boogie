@@ -100,17 +100,6 @@ namespace hash::sha1 {
         return ctx;
     }
 
-    // Given a buffer digest (a vector of words), return a pointer to the block (521 bits) at i.
-    // WARNING this could possibly result in a dangling reference if buffer_digest is freed!
-    // USE WITH CAUTION!!!!
-    std::optional<uint32_t*> digestAt(std::shared_ptr<std::vector<uint32_t>> buffer_digest, uint i) {
-        auto block_index = i * (SHA1_BLOCK_LEN / SHA1_WORD_LEN); 
-        if (block_index >= buffer_digest->size()) {
-            return std::nullopt;
-        }
-        return &(*buffer_digest)[block_index];
-    }
-
     std::string hash(const std::string& message) {
         Buffer buf = utils::to_buffer(message);
         return "Not implemented...";

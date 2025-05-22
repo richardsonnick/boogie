@@ -19,20 +19,6 @@ TEST(SHA1Tests, MakeContextTest) {
     EXPECT_EQ(gotContext->w.size(), 80);
 }
 
-TEST(SHA1Tests, DigestAtTest) {
-    auto buffer = std::make_shared<std::vector<uint32_t>>();
-    for (int i = 0; i < 4; i++) {
-        buffer->push_back(0xDEADBEEF);
-        for (int j = 1; j < sha1::SHA1_BLOCK_LEN / sha1::SHA1_WORD_LEN; j++) {
-            buffer->push_back(0x00);
-        }
-    }
-
-    auto gotInt = sha1::digestAt(buffer, 1);
-    ASSERT_TRUE(gotInt.has_value());
-    EXPECT_EQ(*gotInt.value(), 0xDEADBEEF);
-}
-
 TEST_P(SHA1Tests, SHA1PadTest) {
     const std::string& message = GetParam().first;
     Buffer buf = utils::to_buffer(message);
