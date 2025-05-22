@@ -1,6 +1,11 @@
 # boogie
 A somewhat correct/somewhat secure crypto library.
 
+## Features
+| Feature         | Description                        | Status     |
+|-----------------|------------------------------------|------------|
+| SHA-1           | Hashing algorithm implementation   | In Progress
+
 ## Building
 
 ```bash
