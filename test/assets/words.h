@@ -9,6 +9,7 @@ const std::string lorem = "Lorem ipsum dolor sit amet, consectetur adipiscing el
 "Nullam et ex nulla. Integer laoreet dui in scelerisque condimentum. Pellentesque dictum odio sit amet consequat feugiat. Etiam sit amet nibh risus. Nunc orci lectus, convallis nec accumsan non, bibendum ut velit. Mauris molestie orci sit amet vehicula imperdiet. Donec placerat metus ex, sed consectetur sem blandit venenatis. In ultricies turpis quis ex cursus, in dictum risus pharetra. Donec pellentesque venenatis magna. Curabitur in dui nibh. Maecenas dignissim ultricies turpis, id rutrum ex vehicula vitae. Aenean posuere ligula in ipsum sollicitudin rutrum. Cras eleifend, lacus ut gravida finibus, lectus leo blandit velit, sed auctor purus augue sit amet massa.";
 
 std::vector<std::string> test_vector = {
+    "",
     "hello",
     "                    ",
     "thequickbrownfoxjumpedoverthelazydog",
