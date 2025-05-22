@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 3.14)
 
 project(boogie VERSION 0.0.1 LANGUAGES CXX)
 
@@ -8,7 +8,9 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=address -fno-omit-frame-pointer")
-set(CMAKE_LINKER_FLAGS "${CMAKE_LINKER_FLAGS} -fsanitize=address")
+set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -fsanitize=address")
+set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -fsanitize=address")
+
 
 set(CTEST_OUTPUT_ON_FAILURE ON)
 
@@ -19,12 +21,22 @@ add_executable(boogie
 )
 
 target_include_directories(boogie PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src)
-
-
 target_compile_options(boogie PRIVATE -Wall -Wextra -Wpedantic)
 
+include(FetchContent)
+
+FetchContent_Declare(
+  googletest
+  URL https://github.com/google/googletest/archive/refs/tags/v1.14.0.tar.gz
+)
+
+set(GTEST_CREATE_SHARED_LIBRARY OFF CACHE BOOL "" FORCE)
+set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
+
+FetchContent_MakeAvailable(googletest)
+
 enable_testing()
-find_package(GTest REQUIRED)
+
 add_executable(boogie_tests
   test/utils_test.cpp
 )
@@ -32,8 +44,8 @@ target_include_directories(boogie_tests PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src)
 
 target_link_libraries(boogie_tests
   PRIVATE
-  GTest::gtest
-  GTest::gtest_main
+  gtest
+  gtest_main
   pthread
 )
 
