@@ -82,14 +82,14 @@ TEST_P(SHA1Tests, ToMessageDigestBufferTest) {
     }
 }
 
-TEST(SHA1Tests, ProcessDigestTest) {
-    const std::string& message = "";
+TEST_P(SHA1Tests, ProcessDigestTest) {
+    const auto& [message, expected_hash] = GetParam();
     auto ctx = sha1::makeContext(message);
     ASSERT_TRUE(ctx.has_value());
 
     sha1::process(*ctx);
     std::string s = utils::toString(ctx->H.data(), ctx->H.size());
-    EXPECT_EQ(s, "da39a3ee5e6b4b0d3255bfef95601890afd80709");
+    EXPECT_EQ(s, expected_hash);
 }
 
 INSTANTIATE_TEST_SUITE_P(
