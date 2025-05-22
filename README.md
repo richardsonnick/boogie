@@ -10,8 +10,8 @@ A somewhat correct/somewhat secure crypto library.
 
 ```bash
 # Clone the repository
-git clone https://github.com/username/jerry.git
-cd jerry
+git clone https://github.com/nr/boogie.git
+cd boogie
 
 # Create a build directory
 mkdir build && cd build
