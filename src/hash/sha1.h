@@ -31,6 +31,7 @@ namespace hash::sha1 {
 
         std::shared_ptr<std::vector<uint32_t>> m; // Message digest buffer. Split into 16 word (512 bits) blocks
     };
+    std::string hash(const std::string& s);
     void sha1_pad(Buffer& buf);
     std::shared_ptr<std::vector<uint32_t>> toMessageDigestBuffer(const Buffer& padded_message);
     std::optional<Sha1_context> makeContext(const std::string& message);
