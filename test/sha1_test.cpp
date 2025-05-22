@@ -52,7 +52,7 @@ TEST_P(SHA1Tests, ToMessageDigestBufferTest) {
     Buffer buf = utils::to_buffer(message);
     sha1::sha1_pad(buf); 
     auto got_buffer = sha1::toMessageDigestBuffer(buf);
-    ASSERT_TRUE(got_buffer.has_value());
+    ASSERT_TRUE(got_buffer);
 
     // Each word should be 4 bytes
     ASSERT_EQ(buf.size() % 4, 0);
@@ -64,7 +64,7 @@ TEST_P(SHA1Tests, ToMessageDigestBufferTest) {
         for (size_t j = 0; j < 4; ++j) {
             expectedWord |= (static_cast<uint32_t>(buf[i * 4 + j]) << ((3 - j) * 8));
         }
-        EXPECT_EQ(got_buffer.value()[i], expectedWord);
+        EXPECT_EQ(got_buffer->at(i), expectedWord);
     }
 }
 

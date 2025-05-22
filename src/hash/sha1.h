@@ -29,7 +29,7 @@ namespace hash::sha1 {
         std::array<uint32_t, 80> w;
         std::vector<uint32_t> temp;
 
-        std::vector<uint32_t> m; // Message digest buffer. Split into 16 word (512 bits) blocks
+        std::shared_ptr<std::vector<uint32_t>> m; // Message digest buffer. Split into 16 word (512 bits) blocks
     };
 
 
@@ -66,7 +66,7 @@ namespace hash::sha1 {
         }
     }
 
-    std::optional<std::vector<uint32_t>> toMessageDigestBuffer(const Buffer& padded_message) {
+    std::shared_ptr<std::vector<uint32_t>> toMessageDigestBuffer(const Buffer& padded_message) {
         std::vector<uint32_t> m_digest_buffer;
         size_t num_words = padded_message.size() / 4;
         m_digest_buffer.reserve(num_words);
@@ -78,12 +78,12 @@ namespace hash::sha1 {
                 if (byte_index < padded_message.size()) {
                     w |= (static_cast<uint32_t>(padded_message[byte_index]) << ((3 - j) * 8));
                 } else {
-                    return std::nullopt;
+                    return nullptr;
                 }
             }
             m_digest_buffer.push_back(w);
         }
-        return m_digest_buffer;
+        return std::make_shared<std::vector<uint32_t>>(m_digest_buffer);
     }
 
     std::optional<Sha1_context> makeContext(const std::string& message) {
