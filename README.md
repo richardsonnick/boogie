@@ -3,7 +3,7 @@
 </div>
 
 # boogie
-A somewhat correct/somewhat secure crypto library.
+A crypto library with zero external dependencies. 
 
 ## Features
 | Feature         | Description                        | Status     |
