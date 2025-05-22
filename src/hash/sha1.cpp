@@ -1,10 +1,19 @@
 #include "sha1.h"
 #include <iostream>
 #include <optional>
+#include <cassert>
 
 #include <util/utils.h>
 
 namespace hash::sha1 {
+    std::string hash(const std::string& s) {
+        auto ctx = sha1::makeContext(s);
+        assert(ctx.has_value());
+        sha1::process(ctx.value());
+        std::string result = utils::toString(ctx.value().H.data(), ctx.value().H.size());
+        return result;
+    }
+
     /** 
      * The point of this padding is to make the length a multiple of 512.
      * SHA-1 sequentially processes blocks of 512 bits when computing the
