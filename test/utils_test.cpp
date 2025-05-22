@@ -2,8 +2,11 @@
 
 #include <util/utils.h>
 
-TEST(UtilsTest, SHA1PadTest) {
-    std::string message = "abc";
+class UtilsPaddingTest
+  : public ::testing::TestWithParam<std::string> {};
+
+TEST_P(UtilsPaddingTest, SHA1PadTest) {
+    const std::string& message = GetParam();
     Buffer buf = utils::to_buffer(message);
     utils::sha1_pad(buf);
 
@@ -19,7 +22,7 @@ TEST(UtilsTest, SHA1PadTest) {
         EXPECT_EQ(buf[i], 0x00);
     }
 
-    // Check length
+    // Check encoded length
     uint64_t len = 0;
     for (int i = buf.size() - 4; i < buf.size(); i++) {
         len <<= 8;
@@ -27,3 +30,12 @@ TEST(UtilsTest, SHA1PadTest) {
     }
     EXPECT_EQ(len, message.size() * 8);
 }
+
+INSTANTIATE_TEST_SUITE_P(
+    UtilsPaddingTests,  UtilsPaddingTest,
+    ::testing::Values(
+        "abc",
+        "a",
+        "hello, world!"
+    )
+);
