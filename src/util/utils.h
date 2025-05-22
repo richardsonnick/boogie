@@ -1,3 +1,6 @@
+#ifndef UTILS_H
+#define UTILS_H
+
 #include <iostream>
 #include <vector>
 #include <string>
@@ -16,3 +19,5 @@ namespace utils {
         return Buffer(s.begin(), s.end());
     }
 }
+
+#endif // UTILS_H
