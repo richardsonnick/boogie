@@ -33,6 +33,9 @@ make
 
 # Run tests
 ctest
+
+# Install (may need sudo)
+make install 
 ```
 
 ## Resources
