@@ -10,7 +10,7 @@ A somewhat correct/somewhat secure crypto library.
 
 ```bash
 # Clone the repository
-git clone https://github.com/nr/boogie.git
+git clone https://github.com/NickR23/boogie.git
 cd boogie
 
 # Create a build directory
