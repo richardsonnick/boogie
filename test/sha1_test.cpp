@@ -82,6 +82,16 @@ TEST_P(SHA1Tests, ToMessageDigestBufferTest) {
     }
 }
 
+TEST(SHA1Tests, ProcessDigestTest) {
+    const std::string& message = "";
+    auto ctx = sha1::makeContext(message);
+    ASSERT_TRUE(ctx.has_value());
+
+    sha1::process(*ctx);
+    std::string s = utils::toString(ctx->H.data(), ctx->H.size());
+    EXPECT_EQ(s, "da39a3ee5e6b4b0d3255bfef95601890afd80709");
+}
+
 INSTANTIATE_TEST_SUITE_P(
     SHA1TestVector,  SHA1Tests,
     ::testing::ValuesIn(testing::test_vector)
