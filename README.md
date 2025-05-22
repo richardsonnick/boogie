@@ -29,3 +29,7 @@ ctest
 
 ## Resources
 * Sha1 RFC: https://www.ietf.org/rfc/rfc3174.txt
+
+<div align="center">
+  <img src="https://media.tenor.com/5YSoSYGxbUMAAAAM/dancing-skeleton.gif" alt="Dancing Skeleton GIF" />
+</div>
