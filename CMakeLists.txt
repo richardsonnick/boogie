@@ -40,6 +40,8 @@ enable_testing()
 
 add_executable(boogie_tests
   test/sha1_test.cpp
+  src/hash/sha1.cpp
+  src/util/utils.cpp
 )
 
 target_include_directories(boogie_tests
