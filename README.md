@@ -6,9 +6,9 @@
 A crypto library with zero external dependencies. 
 
 ## Features
-| Feature         | Description                        | Status     |
-|-----------------|------------------------------------|------------|
-| SHA-1           | Hashing algorithm implementation   | Functional
+| Feature         | Status     |
+|-----------------|------------|
+| SHA-1           | Functional |
 
 ## Usage
 
