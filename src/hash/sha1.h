@@ -100,11 +100,6 @@ namespace hash::sha1 {
         return ctx;
     }
 
-    std::string hash(const std::string& message) {
-        Buffer buf = utils::to_buffer(message);
-        return "Not implemented...";
-    }
-
     std::optional<uint32_t> f(uint t, uint32_t B, uint32_t C, uint32_t D) {
         if (t <= 19) {
             return (B & C) | ((~B) & D);
