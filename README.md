@@ -4,7 +4,7 @@ A somewhat correct/somewhat secure crypto library.
 ## Features
 | Feature         | Description                        | Status     |
 |-----------------|------------------------------------|------------|
-| SHA-1           | Hashing algorithm implementation   | Functional (Contains inefficient/unsafe code)
+| SHA-1           | Hashing algorithm implementation   | Functional
 
 ## Usage
 
