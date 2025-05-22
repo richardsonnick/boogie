@@ -1,5 +1,6 @@
 #include <iostream>
 #include <optional>
+#include <memory>
 
 #include <util/utils.h>
 
