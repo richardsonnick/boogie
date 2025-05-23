@@ -15,8 +15,8 @@ namespace utils {
 
     std::string toString(const uint32_t* data, size_t size);
 
-    inline Buffer to_buffer(const std::string& s) {
-        return Buffer(s.begin(), s.end());
+    inline std::vector<char> to_buffer(const std::string& s) {
+        return std::vector<char>(s.begin(), s.end());
     }
 }
 
