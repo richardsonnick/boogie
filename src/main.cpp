@@ -16,11 +16,9 @@ int main(int argc, char* argv[]) {
     std::string input;
     std::stringstream buffer;
 
-    // Read from stdin
     buffer << std::cin.rdbuf();
     input = buffer.str();
 
-    // Remove trailing newline characters
     input.erase(std::remove(input.begin(), input.end(), '\n'), input.end());
 
     if (hash_function == "sha1") {
