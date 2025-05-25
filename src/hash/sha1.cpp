@@ -97,7 +97,7 @@ namespace hash::sha1 {
             for (size_t j = 0; j < 4; ++j) {
                 size_t byte_index = i * 4 + j; // Index should be shifted a word (4 bytes) and 'j' over.
                 if (byte_index < padded_message.size()) {
-                    w |= (static_cast<uint32_t>(padded_message[byte_index]) << ((3 - j) * 8));
+                    w |= (static_cast<uint32_t>(static_cast<unsigned char>(padded_message[byte_index])) << ((3 - j) * 8));
                 } else {
                     return nullptr;
                 }

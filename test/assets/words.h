@@ -11,14 +11,14 @@ const std::string lorem = "Lorem ipsum dolor sit amet, consectetur adipiscing el
 std::vector<std::pair<std::string, std::string>> test_vector = {
     {"", "da39a3ee5e6b4b0d3255bfef95601890afd80709"},
     {"hello","aaf4c61ddcc5e8a2dabede0f3b482cd9aea9434d"},
-    // {"                    ", "7f70a3507e2bc0b3652e93c5ff6a893feb1e6152"},
-    // {"thequickbrownfoxjumpedoverthelazydog", "185c06564dc8bb9d2ccaf8adf32f1b6fde930270"},
-    // {"We got a fast car.", "015ea69d71d34beb14a441580ca882df35c90003"},
-    // {"Dont-Dont u want me baby", "4b6ef2f8b66d7d3ebb38d4ad7a00d29efc77a368"},
-    // {"dancing in the moonlight ", "97797368008ebd878b9635a429a98a52c9858c6a"},
-    // {"It's super natu ral deeeee light", "cfbe7cd40855a37a7e822d8c7f7104703a6aa172"},
-    // {"%#$@%@#$%^@#$%@#$%T%^TDSFASDFT$YG", "ab4ae308339dacf2e8a3de9361297b1022e544c5"},
-    // {lorem, "2401ad54ef524c1a646f0a01ad0260f1c9b10017"}
+    {"                    ", "7f70a3507e2bc0b3652e93c5ff6a893feb1e6152"},
+    {"thequickbrownfoxjumpedoverthelazydog", "185c06564dc8bb9d2ccaf8adf32f1b6fde930270"},
+    {"We got a fast car.", "015ea69d71d34beb14a441580ca882df35c90003"},
+    {"Dont-Dont u want me baby", "4b6ef2f8b66d7d3ebb38d4ad7a00d29efc77a368"},
+    {"dancing in the moonlight ", "97797368008ebd878b9635a429a98a52c9858c6a"},
+    {"It's super natu ral deeeee light", "cfbe7cd40855a37a7e822d8c7f7104703a6aa172"},
+    {"%#$@%@#$%^@#$%@#$%T%^TDSFASDFT$YG", "ab4ae308339dacf2e8a3de9361297b1022e544c5"},
+    {lorem, "2401ad54ef524c1a646f0a01ad0260f1c9b10017"}
 };
 
 }

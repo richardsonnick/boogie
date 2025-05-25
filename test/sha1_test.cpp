@@ -64,7 +64,7 @@ TEST_P(SHA1Tests, ToMessageDigestBufferTest) {
     for (size_t i = 0; i < got_buffer->size(); i++) {
         uint32_t expectedWord = 0;
         for (size_t j = 0; j < 4; ++j) {
-            expectedWord |= (static_cast<uint32_t>(buf[i * 4 + j]) << ((3 - j) * 8));
+            expectedWord |= (static_cast<uint32_t>(static_cast<unsigned char>(buf[i * 4 + j])) << ((3 - j) * 8));
         }
         EXPECT_EQ(got_buffer->at(i), expectedWord);
     }
