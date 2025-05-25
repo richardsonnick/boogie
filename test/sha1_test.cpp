@@ -79,6 +79,12 @@ TEST_P(SHA1Tests, ProcessDigestTest) {
     EXPECT_EQ(s, expected_hash);
 }
 
+TEST_P(SHA1Tests, HashTest) {
+    const auto& [message, expected_hash] = GetParam();
+    auto result = sha1::hash(message);
+    EXPECT_EQ(result, expected_hash);
+}
+
 INSTANTIATE_TEST_SUITE_P(
     SHA1TestVector,  SHA1Tests,
     ::testing::ValuesIn(testing::test_vector)

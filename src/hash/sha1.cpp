@@ -15,9 +15,15 @@ namespace hash::sha1 {
     template<typename InputStream>
     static std::string hash_stream(InputStream& is) {
         auto ctx = sha1::makeContext();
+
+        if (is.rdbuf()-> in_avail() == 0) { // is.read() will fail for empty input streams
+            std::vector<char> empty_buffer;
+            process(ctx, empty_buffer, is.gcount());
+            return final(ctx);
+        }
+
         const int buffer_size = 4096; // Stream in 4096 sized chunks
         std::vector<char> buffer(buffer_size);
-
         while(is.read(buffer.data(), buffer.size())) { // Read in 4096 byte sized chunks from stream
             process(ctx, buffer, is.gcount());
         }
