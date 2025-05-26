@@ -23,27 +23,24 @@ add_executable(boogie
 target_include_directories(boogie PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src)
 target_compile_options(boogie PRIVATE -Wall -Wextra -Wpedantic)
 
-# Create a library for SHA-1
-add_library(sha1_lib
+add_library(boogie_lib
   src/hash/sha1.cpp
   src/util/utils.cpp
 )
 
-target_include_directories(sha1_lib
+target_include_directories(boogie_lib
   PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/include
   PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/src/util
 )
 
-target_compile_options(sha1_lib PRIVATE -Wall -Wextra -Wpedantic)
+target_compile_options(boogie_lib PRIVATE -Wall -Wextra -Wpedantic)
 
-# Link the SHA-1 library to the boogie executable
-target_link_libraries(boogie PRIVATE sha1_lib)
+target_link_libraries(boogie PRIVATE boogie_lib)
 
-# Install the library
-install(TARGETS sha1_lib
-  EXPORT sha1_lib_export
+install(TARGETS boogie_lib
+  EXPORT boogie_lib_export
   ARCHIVE DESTINATION lib
   LIBRARY DESTINATION lib
   RUNTIME DESTINATION bin
@@ -55,9 +52,9 @@ install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include/
 )
 
 # Export the library for use by other projects
-install(EXPORT sha1_lib_export
-  FILE sha1_lib-config.cmake
-  DESTINATION lib/cmake/sha1_lib
+install(EXPORT boogie_lib_export
+  FILE boogie_lib-config.cmake
+  DESTINATION lib/cmake/boogie_lib
 )
 
 include(FetchContent)
@@ -90,7 +87,7 @@ target_link_libraries(boogie_tests
   gtest
   gtest_main
   pthread
-  sha1_lib
+  boogie_lib
 )
 
 include(GoogleTest)
