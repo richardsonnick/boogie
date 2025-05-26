@@ -32,6 +32,7 @@ namespace hash::sha1 {
         uint32_t temp;
 
         std::shared_ptr<std::vector<uint32_t>> m; // Message digest buffer. Split into 16 word (512 bits) blocks
+        uint64_t message_len;
     };
     Sha1_context makeContext();
 
@@ -39,7 +40,7 @@ namespace hash::sha1 {
     static std::string hash_stream(InputStream& is);
 
     std::string hash(const std::string& s);
-    uint sha1_pad(std::vector<char>& buf, uint64_t len);
+    uint sha1_pad(std::vector<char>& buf, uint64_t message_len);
     std::shared_ptr<std::vector<uint32_t>> toMessageDigestBuffer(const std::vector<char>& padded_message, uint64_t padded_buffer_size);
     void process(Sha1_context& ctx, std::vector<char> data, size_t buffer_size, bool is_last_chunk);
 }

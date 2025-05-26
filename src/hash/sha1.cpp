@@ -8,6 +8,10 @@
 
 namespace hash::sha1 {
 
+    // This could be a macro to allow for compile time config for systems with small memory resources.
+    // (fsstream could read from disk)
+    constexpr size_t CHUNK_SIZE = 64;
+
     static std::string final(const Sha1_context ctx) {
         return utils::toString(ctx.H.data(), ctx.H.size());
     }
@@ -22,8 +26,7 @@ namespace hash::sha1 {
             return final(ctx);
         }
 
-        const int buffer_size = 4096; // Stream in 4096 sized chunks
-        std::vector<char> buffer(buffer_size);
+        std::vector<char> buffer(CHUNK_SIZE);
         while(is.read(buffer.data(), buffer.size())) { // Read in 4096 byte sized chunks from stream
             process(ctx, buffer, is.gcount(), false);
         }
@@ -56,7 +59,8 @@ namespace hash::sha1 {
      * 
      * Returns the size of the final padded buffer.
     */
-    uint sha1_pad(std::vector<char>& buf, uint64_t len) {
+    uint sha1_pad(std::vector<char>& buf, uint64_t len, uint64_t message_len) {
+        message_len += len; // We must add the characters that we have read in this chunk iteration
         const size_t block_size = SHA1_BLOCK_LEN / utils::BYTE_LEN;
         size_t resize_len = ((len + block_size - 1) / block_size) * block_size;
 
@@ -69,6 +73,7 @@ namespace hash::sha1 {
         };
 
         // Append 1 (0x80)
+        // len is wrong here.
         append(buf, 0x80);
 
         // Pad with 0s
@@ -80,7 +85,7 @@ namespace hash::sha1 {
         }
 
         // Append buf length to padded buf. 
-        auto bit_len = len * utils::BYTE_LEN;
+        auto bit_len = message_len * utils::BYTE_LEN;
         for (int j = 0; j < utils::BYTE_LEN; ++j) {
             int shift = ((utils::BYTE_LEN - 1) - j) * utils::BYTE_LEN;
 
@@ -119,6 +124,7 @@ namespace hash::sha1 {
         for (size_t i = 0; i < ctx.w.size(); i++) {
             ctx.w[i] = 0;
         }
+        ctx.message_len = 0;
         return ctx;
     }
 
@@ -155,7 +161,7 @@ namespace hash::sha1 {
     // TODO reference the chunk (data) instead of copy
     void process(Sha1_context& ctx, std::vector<char> data, size_t buffer_size, bool is_last_chunk) {
         if (is_last_chunk) {
-            buffer_size = sha1_pad(data, buffer_size);
+            buffer_size = sha1_pad(data, buffer_size, ctx.message_len);
         }
 
         auto digest_buffer = toMessageDigestBuffer(data, buffer_size);
@@ -226,5 +232,6 @@ namespace hash::sha1 {
             ctx.H[3] += D;
             ctx.H[4] += E;
         }
+        ctx.message_len += buffer_size;
     }
 }
