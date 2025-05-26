@@ -10,7 +10,8 @@ namespace hash::sha1 {
 
     // This could be a macro to allow for compile time config for systems with small memory resources.
     // (fsstream could read from disk)
-    constexpr size_t CHUNK_SIZE = 64;
+    // NOTE should prob assert that this chunk size is > block size
+    constexpr size_t CHUNK_SIZE = 512;
 
     static std::string final(const Sha1_context ctx) {
         return utils::toString(ctx.H.data(), ctx.H.size());
@@ -59,15 +60,15 @@ namespace hash::sha1 {
      * 
      * Returns the size of the final padded buffer.
     */
-    uint sha1_pad(std::vector<char>& buf, uint64_t len, uint64_t message_len) {
-        message_len += len; // We must add the characters that we have read in this chunk iteration
+    uint sha1_pad(std::vector<char>& buf, uint64_t message_end_pos, uint64_t message_len) {
+        message_len += message_end_pos; // We must add the characters that we have read in this chunk iteration
         const size_t block_size = SHA1_BLOCK_LEN / utils::BYTE_LEN;
-        size_t resize_len = ((len + block_size - 1) / block_size) * block_size;
+        size_t resize_len = ((message_end_pos + block_size - 1) / block_size) * block_size;
 
 
         buf.resize(std::max(resize_len, block_size));
         assert(buf.size() % 64 == 0);
-        uint i = len;
+        uint i = message_end_pos;
         auto append = [&i](std::vector<char>& buf, uint8_t elem) {
             buf[i++] = elem;
         };
