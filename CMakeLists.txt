@@ -41,6 +41,25 @@ target_compile_options(sha1_lib PRIVATE -Wall -Wextra -Wpedantic)
 # Link the SHA-1 library to the boogie executable
 target_link_libraries(boogie PRIVATE sha1_lib)
 
+# Install the library
+install(TARGETS sha1_lib
+  EXPORT sha1_lib_export
+  ARCHIVE DESTINATION lib
+  LIBRARY DESTINATION lib
+  RUNTIME DESTINATION bin
+)
+
+# Install the public headers
+install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/include/
+  DESTINATION include
+)
+
+# Export the library for use by other projects
+install(EXPORT sha1_lib_export
+  FILE sha1_lib-config.cmake
+  DESTINATION lib/cmake/sha1_lib
+)
+
 include(FetchContent)
 
 FetchContent_Declare(
