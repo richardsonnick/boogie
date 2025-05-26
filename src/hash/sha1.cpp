@@ -11,7 +11,7 @@ namespace hash::sha1 {
     // This could be a macro to allow for compile time config for systems with small memory resources.
     // (fsstream could read from disk)
     // NOTE should prob assert that this chunk size is > block size
-    constexpr size_t CHUNK_SIZE = 512;
+    constexpr size_t CHUNK_SIZE = 1024;
 
     static std::string final(const Sha1_context ctx) {
         return utils::toString(ctx.H.data(), ctx.H.size());
