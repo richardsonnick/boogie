@@ -18,12 +18,28 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
 add_executable(boogie
   src/main.cpp
-  src/hash/sha1.cpp
-  src/util/utils.cpp
 )
 
 target_include_directories(boogie PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src)
 target_compile_options(boogie PRIVATE -Wall -Wextra -Wpedantic)
+
+# Create a library for SHA-1
+add_library(sha1_lib
+  src/hash/sha1.cpp
+  src/util/utils.cpp
+)
+
+target_include_directories(sha1_lib
+  PUBLIC
+    ${CMAKE_CURRENT_SOURCE_DIR}/include
+  PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/util
+)
+
+target_compile_options(sha1_lib PRIVATE -Wall -Wextra -Wpedantic)
+
+# Link the SHA-1 library to the boogie executable
+target_link_libraries(boogie PRIVATE sha1_lib)
 
 include(FetchContent)
 
@@ -42,8 +58,6 @@ enable_testing()
 
 add_executable(boogie_tests
   test/sha1_test.cpp
-  src/hash/sha1.cpp
-  src/util/utils.cpp
 )
 
 target_include_directories(boogie_tests
@@ -57,6 +71,7 @@ target_link_libraries(boogie_tests
   gtest
   gtest_main
   pthread
+  sha1_lib
 )
 
 include(GoogleTest)

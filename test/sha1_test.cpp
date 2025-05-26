@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include <src/hash/sha1.h>
+#include <hash/sha1.h>
 #include <test/assets/words.h>
 
 using namespace hash;
