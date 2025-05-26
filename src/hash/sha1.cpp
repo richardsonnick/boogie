@@ -2,16 +2,51 @@
 #include <iostream>
 #include <optional>
 #include <cassert>
+#include <sstream>
 
 #include <util/utils.h>
 
 namespace hash::sha1 {
-    std::string hash(const std::string& s) {
-        auto ctx = sha1::makeContext(s);
-        assert(ctx.has_value());
-        sha1::process(ctx.value());
-        std::string result = utils::toString(ctx.value().H.data(), ctx.value().H.size());
-        return result;
+
+    // This could be a macro to allow for compile time config for systems with small memory resources.
+    // (fsstream could read from disk)
+    // NOTE should prob assert that this chunk size is > block size
+    constexpr size_t CHUNK_SIZE = 512;
+
+    static std::string final(const Sha1_context ctx) {
+        return utils::toString(ctx.H.data(), ctx.H.size());
+    }
+
+    template<typename InputStream>
+    static std::string hash_stream(InputStream& is) {
+        auto ctx = sha1::makeContext();
+
+        if (is.rdbuf()-> in_avail() == 0) { // is.read() will fail for empty input streams
+            std::vector<char> empty_buffer;
+            process(ctx, empty_buffer, is.gcount(), true);
+            return final(ctx);
+        }
+
+        std::vector<char> buffer(CHUNK_SIZE);
+        while(is.read(buffer.data(), buffer.size())) { // Read in 4096 byte sized chunks from stream
+            process(ctx, buffer, is.gcount(), false);
+        }
+
+        /**
+         * InputSteam::read(data, size) attempts to read size bytes. 
+         * InputSteam::gcount returns the number of bytes left.
+         * Let's read the rest of the stream left over from the read operations.
+         */
+        if(is.gcount() > 0) { 
+            process(ctx, buffer, is.gcount(), true);
+        }
+
+        return final(ctx);
+    }
+
+    std::string hash(const std::string& data) {
+        std::istringstream iss(data);
+        return hash_stream(iss);
     }
 
     /** 
@@ -22,34 +57,51 @@ namespace hash::sha1 {
      * this should produce a message of length 512 * `n`. The 64-bit int is the
      * length of the original message. The padded message is then processed by
      * SHA-1 as `n` 512-bit blocks.
+     * 
+     * Returns the size of the final padded buffer.
     */
-    void sha1_pad(Buffer& buf) {
-        uint64_t len = buf.size() * utils::BYTE_LEN; // Num bits in original message
+    uint sha1_pad(std::vector<char>& buf, uint64_t message_end_pos, uint64_t message_len) {
+        message_len += message_end_pos; // We must add the characters that we have read in this chunk iteration
+        const size_t block_size = SHA1_BLOCK_LEN / utils::BYTE_LEN;
+        size_t resize_len = ((message_end_pos + block_size - 1) / block_size) * block_size;
+
+
+        buf.resize(std::max(resize_len, block_size));
+        assert(buf.size() % 64 == 0);
+        uint i = message_end_pos;
+        auto append = [&i](std::vector<char>& buf, uint8_t elem) {
+            buf[i++] = elem;
+        };
+
         // Append 1 (0x80)
-        buf.push_back(0x80);
+        // len is wrong here.
+        append(buf, 0x80);
 
         // Pad with 0s
         // This should append until you are 64 bits (2 words) short of a multiple of 512.
         // This extra space is for the 2 word sized length the be appended.
         auto length_pad = (2 * SHA1_WORD_LEN) / utils::BYTE_LEN;
-        while ((buf.size() + length_pad) % (SHA1_BLOCK_LEN / utils::BYTE_LEN) != 0) {
-            buf.push_back(0x00);
+        while ((i + length_pad) % (SHA1_BLOCK_LEN / utils::BYTE_LEN) != 0) {
+            append(buf, 0x00);
         }
 
         // Append buf length to padded buf. 
-        for (int i = 0; i < utils::BYTE_LEN; ++i) {
-            int shift = ((utils::BYTE_LEN - 1) - i) * utils::BYTE_LEN;
+        auto bit_len = message_len * utils::BYTE_LEN;
+        for (int j = 0; j < utils::BYTE_LEN; ++j) {
+            int shift = ((utils::BYTE_LEN - 1) - j) * utils::BYTE_LEN;
 
             // Grab a byte by shifting over i times and masking.
-            uint8_t byte = static_cast<uint8_t>((len >> shift) & 0xFF);
+            uint8_t byte = static_cast<uint8_t>((bit_len >> shift) & 0xFF);
 
-            buf.push_back(byte);
+            append(buf, byte);
         }
+
+        return i;
     }
 
-    std::shared_ptr<std::vector<uint32_t>> toMessageDigestBuffer(const Buffer& padded_message) {
+    std::shared_ptr<std::vector<uint32_t>> toMessageDigestBuffer(const std::vector<char>& padded_message, uint64_t padded_buffer_size) {
         std::vector<uint32_t> m_digest_buffer;
-        size_t num_words = padded_message.size() / 4;
+        size_t num_words = padded_buffer_size / 4;
         m_digest_buffer.reserve(num_words);
 
         for (size_t i = 0; i < num_words; ++i) {
@@ -57,7 +109,7 @@ namespace hash::sha1 {
             for (size_t j = 0; j < 4; ++j) {
                 size_t byte_index = i * 4 + j; // Index should be shifted a word (4 bytes) and 'j' over.
                 if (byte_index < padded_message.size()) {
-                    w |= (static_cast<uint32_t>(padded_message[byte_index]) << ((3 - j) * 8));
+                    w |= (static_cast<uint32_t>(static_cast<unsigned char>(padded_message[byte_index])) << ((3 - j) * 8));
                 } else {
                     return nullptr;
                 }
@@ -67,18 +119,13 @@ namespace hash::sha1 {
         return std::make_shared<std::vector<uint32_t>>(m_digest_buffer);
     }
 
-    std::optional<Sha1_context> makeContext(const std::string& message) {
+    Sha1_context makeContext() {
         Sha1_context ctx;
-        for (int i = 0; i < ctx.w.size(); i++) {
+        // TODO find a more efficient way to zero init a buffer.
+        for (size_t i = 0; i < ctx.w.size(); i++) {
             ctx.w[i] = 0;
         }
-        Buffer buf = utils::to_buffer(message);
-        sha1_pad(buf);
-        auto digest_buffer = toMessageDigestBuffer(buf);
-        if (!digest_buffer) {
-            return std::nullopt;
-        }
-        ctx.m = std::move(digest_buffer);
+        ctx.message_len = 0;
         return ctx;
     }
 
@@ -112,11 +159,25 @@ namespace hash::sha1 {
         return std::nullopt;
     }
 
-    void process(Sha1_context& ctx) {
+    // TODO reference the chunk (data) instead of copy
+    void process(Sha1_context& ctx, std::vector<char> data, size_t buffer_size, bool is_last_chunk) {
+        if (is_last_chunk) {
+            buffer_size = sha1_pad(data, buffer_size, ctx.message_len);
+        }
+
+        auto digest_buffer = toMessageDigestBuffer(data, buffer_size);
+        if (!digest_buffer) {
+            // TODO err condition
+            return;
+        }
+        //TODO the digest buffer does not need to be carried between stream iterations.
+        // Remove Sha1_context::m 
+        ctx.m = std::move(digest_buffer);
+
         // ctx.m has uint32_t elements
         const auto words_per_block = SHA1_BLOCK_LEN / SHA1_WORD_LEN;
         // For each block
-        for (int block_index = 0; block_index < ctx.m->size() / words_per_block; block_index++) {
+        for (size_t block_index = 0; block_index < ctx.m->size() / words_per_block; block_index++) {
             ctx.b1[0] = ctx.H[0];
             ctx.b1[1] = ctx.H[1];
             ctx.b1[2] = ctx.H[2];
@@ -172,5 +233,6 @@ namespace hash::sha1 {
             ctx.H[3] += D;
             ctx.H[4] += E;
         }
+        ctx.message_len += buffer_size;
     }
 }

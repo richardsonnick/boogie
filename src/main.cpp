@@ -1,7 +1,6 @@
 #include <iostream>
 #include <string>
 #include <sstream>
-#include <algorithm>
 
 #include "hash/sha1.h"
 
@@ -16,10 +15,9 @@ int main(int argc, char* argv[]) {
     std::string input;
     std::stringstream buffer;
 
+    // Read from stdin
     buffer << std::cin.rdbuf();
     input = buffer.str();
-
-    input.erase(std::remove(input.begin(), input.end(), '\n'), input.end());
 
     if (hash_function == "sha1") {
         std::cout << hash::sha1::hash(input) << std::endl;
