@@ -41,5 +41,5 @@ namespace hash::sha1 {
     std::string hash(const std::string& s);
     uint sha1_pad(std::vector<char>& buf, uint64_t len);
     std::shared_ptr<std::vector<uint32_t>> toMessageDigestBuffer(const std::vector<char>& padded_message, uint64_t padded_buffer_size);
-    void process(Sha1_context& ctx, std::vector<char> data, size_t buffer_size);
+    void process(Sha1_context& ctx, std::vector<char> data, size_t buffer_size, bool is_last_chunk);
 }

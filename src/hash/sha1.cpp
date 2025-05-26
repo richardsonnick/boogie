@@ -18,14 +18,14 @@ namespace hash::sha1 {
 
         if (is.rdbuf()-> in_avail() == 0) { // is.read() will fail for empty input streams
             std::vector<char> empty_buffer;
-            process(ctx, empty_buffer, is.gcount());
+            process(ctx, empty_buffer, is.gcount(), true);
             return final(ctx);
         }
 
         const int buffer_size = 4096; // Stream in 4096 sized chunks
         std::vector<char> buffer(buffer_size);
         while(is.read(buffer.data(), buffer.size())) { // Read in 4096 byte sized chunks from stream
-            process(ctx, buffer, is.gcount());
+            process(ctx, buffer, is.gcount(), false);
         }
 
         /**
@@ -34,7 +34,7 @@ namespace hash::sha1 {
          * Let's read the rest of the stream left over from the read operations.
          */
         if(is.gcount() > 0) { 
-            process(ctx, buffer, is.gcount());
+            process(ctx, buffer, is.gcount(), true);
         }
 
         return final(ctx);
@@ -153,9 +153,12 @@ namespace hash::sha1 {
     }
 
     // TODO reference the chunk (data) instead of copy
-    void process(Sha1_context& ctx, std::vector<char> data, size_t buffer_size) {
-        uint64_t padded_buffer_size = sha1_pad(data, buffer_size);
-        auto digest_buffer = toMessageDigestBuffer(data, padded_buffer_size);
+    void process(Sha1_context& ctx, std::vector<char> data, size_t buffer_size, bool is_last_chunk) {
+        if (is_last_chunk) {
+            buffer_size = sha1_pad(data, buffer_size);
+        }
+
+        auto digest_buffer = toMessageDigestBuffer(data, buffer_size);
         if (!digest_buffer) {
             // TODO err condition
             return;
