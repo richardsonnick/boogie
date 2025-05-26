@@ -8,7 +8,7 @@ A crypto library with zero external dependencies.
 ## Features
 | Feature         | Status     |
 |-----------------|------------|
-| SHA-1           | Functional |
+| SHA-1           | Functional (Now with chunking!) |
 
 ## Usage
 
