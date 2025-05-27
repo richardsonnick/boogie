@@ -44,7 +44,7 @@ namespace hash::sha1 {
         return final(ctx);
     }
 
-    std::string hash(const std::string& data) {
+    std::string hash_string(const std::string& data) {
         std::istringstream iss(data);
         return hash_stream(iss);
     }
