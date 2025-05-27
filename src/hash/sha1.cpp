@@ -22,7 +22,7 @@ namespace hash::sha1 {
     static std::string hash_stream(InputStream& is) {
         auto ctx = sha1::makeContext();
 
-        if (is.rdbuf()-> in_avail() == 0) { // is.read() will fail for empty input streams
+        if (is.peek() == EOF) { // is.read() will fail for empty input streams
             std::vector<char> empty_buffer;
             process(ctx, empty_buffer, is.gcount(), true);
             return final(ctx);
@@ -55,6 +55,7 @@ namespace hash::sha1 {
         if (!ifs) {
             throw std::runtime_error("Failed to open file: " + path);
         }
+        std::cout << "Stream state: " << ifs.good() << ", in_avail: " << ifs.rdbuf()->in_avail() << std::endl;
         return hash_stream(ifs);
     }
 

@@ -90,3 +90,9 @@ INSTANTIATE_TEST_SUITE_P(
     SHA1TestVector,  SHA1Tests,
     ::testing::ValuesIn(testing::test_vector)
 );
+
+TEST(SHA1Tests, HashFile) {
+    const std::string bee_movie_path = "/Users/nr/code/boogie/test/assets/bee_movie.txt";
+    auto r = sha1::hash_file(bee_movie_path);
+    EXPECT_EQ(r, "93ae3d6436613af8a6957db81e1701fbc50de7a8");
+}
