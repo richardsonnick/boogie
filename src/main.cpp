@@ -20,7 +20,7 @@ int main(int argc, char* argv[]) {
     input = buffer.str();
 
     if (hash_function == "sha1") {
-        std::cout << hash::sha1::hash(input) << std::endl;
+        std::cout << hash::sha1::hash_string(input) << std::endl;
     } else {
         std::cerr << "Error: Unknown hash function '" << hash_function << "'\n";
         return 1;

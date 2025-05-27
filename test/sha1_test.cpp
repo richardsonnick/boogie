@@ -1,6 +1,7 @@
 #include <gtest/gtest.h>
 
 #include <hash/sha1.h>
+#include <util/utils.h>
 #include <test/assets/words.h>
 
 using namespace hash;
@@ -81,7 +82,7 @@ TEST_P(SHA1Tests, ProcessDigestTest) {
 
 TEST_P(SHA1Tests, HashTest) {
     const auto& [message, expected_hash] = GetParam();
-    auto result = sha1::hash(message);
+    auto result = sha1::hash_string(message);
     EXPECT_EQ(result, expected_hash);
 }
 

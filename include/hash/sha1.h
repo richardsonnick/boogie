@@ -3,8 +3,6 @@
 #include <memory>
 #include <sstream>
 
-#include <util/utils.h>
-
 namespace hash::sha1 {
     constexpr int SHA1_WORD_LEN = 32;
     constexpr int SHA1_BLOCK_LEN = 512;
@@ -39,7 +37,7 @@ namespace hash::sha1 {
     template<typename InputStream>
     static std::string hash_stream(InputStream& is);
 
-    std::string hash(const std::string& s);
+    std::string hash_string(const std::string& s);
     uint sha1_pad(std::vector<char>& buf, uint64_t message_end_pos, uint64_t message_len);
     std::shared_ptr<std::vector<uint32_t>> toMessageDigestBuffer(const std::vector<char>& padded_message, uint64_t padded_buffer_size);
     void process(Sha1_context& ctx, std::vector<char> data, size_t buffer_size, bool is_last_chunk);
