@@ -1,4 +1,4 @@
-#include "sha1.h"
+#include <hash/sha1.h>
 #include <iostream>
 #include <optional>
 #include <cassert>
