@@ -55,7 +55,6 @@ namespace hash::sha1 {
         if (!ifs) {
             throw std::runtime_error("Failed to open file: " + path);
         }
-        std::cout << "Stream state: " << ifs.good() << ", in_avail: " << ifs.rdbuf()->in_avail() << std::endl;
         return hash_stream(ifs);
     }
 
