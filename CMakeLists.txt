@@ -30,9 +30,10 @@ add_library(boogie_lib
 
 target_include_directories(boogie_lib
   PUBLIC
-    ${CMAKE_CURRENT_SOURCE_DIR}/include
+    $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/include>
+    $<INSTALL_INTERFACE:include>
   PRIVATE
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/util
+    ${CMAKE_SOURCE_DIR}/src/util
 )
 
 target_compile_options(boogie_lib PRIVATE -Wall -Wextra -Wpedantic)

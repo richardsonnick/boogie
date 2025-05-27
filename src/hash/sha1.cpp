@@ -3,6 +3,7 @@
 #include <optional>
 #include <cassert>
 #include <sstream>
+#include <fstream>
 
 #include <util/utils.h>
 
@@ -47,6 +48,11 @@ namespace hash::sha1 {
     std::string hash(const std::string& data) {
         std::istringstream iss(data);
         return hash_stream(iss);
+    }
+
+    std::string hash_file(const std::string& path) {
+        std::ifstream ifs(path, std::ios::binary);
+        return hash_stream(ifs);
     }
 
     /** 
