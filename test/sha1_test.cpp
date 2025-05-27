@@ -3,6 +3,7 @@
 #include <hash/sha1.h>
 #include <util/utils.h>
 #include <test/assets/words.h>
+#include <filesystem>
 
 using namespace hash;
 class SHA1Tests
@@ -92,7 +93,8 @@ INSTANTIATE_TEST_SUITE_P(
 );
 
 TEST(SHA1Tests, HashFile) {
-    const std::string bee_movie_path = "/Users/nr/code/boogie/test/assets/bee_movie.txt";
+    const std::string current_dir = std::filesystem::path(__FILE__).parent_path().string();
+    const std::string bee_movie_path = current_dir + "/assets/bee_movie.txt";
     auto r = sha1::hash_file(bee_movie_path);
     EXPECT_EQ(r, "93ae3d6436613af8a6957db81e1701fbc50de7a8");
 }
