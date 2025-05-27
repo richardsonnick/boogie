@@ -3,8 +3,6 @@
 #include <memory>
 #include <sstream>
 
-#include <util/utils.h>
-
 namespace hash::sha1 {
     constexpr int SHA1_WORD_LEN = 32;
     constexpr int SHA1_BLOCK_LEN = 512;
