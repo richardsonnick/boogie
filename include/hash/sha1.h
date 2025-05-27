@@ -2,10 +2,15 @@
 #include <optional>
 #include <memory>
 #include <sstream>
+#include <vector>
 
 #pragma once
 
 namespace hash::sha1 {
+    // This could be a macro to allow for compile time config for systems with small memory resources.
+    // (fsstream could read from disk)
+    // NOTE should prob assert that this chunk size is > block size
+    constexpr size_t CHUNK_SIZE = 1024;
     constexpr int SHA1_WORD_LEN = 32;
     constexpr int SHA1_BLOCK_LEN = 512;
 
@@ -35,13 +40,38 @@ namespace hash::sha1 {
         uint64_t message_len;
     };
     Sha1_context makeContext();
-
-    template<typename InputStream>
-    static std::string hash_stream(InputStream& is);
-
     std::string hash_string(const std::string& s);
     std::string hash_file(const std::string& path);
     uint sha1_pad(std::vector<char>& buf, uint64_t message_end_pos, uint64_t message_len);
     std::shared_ptr<std::vector<uint32_t>> toMessageDigestBuffer(const std::vector<char>& padded_message, uint64_t padded_buffer_size);
     void process(Sha1_context& ctx, std::vector<char> data, size_t buffer_size, bool is_last_chunk);
+    static inline std::string final(const Sha1_context ctx);
+
+    template<typename InputStream>
+    static std::string hash_stream(InputStream& is) {
+        auto ctx = sha1::makeContext();
+
+        if (is.peek() == EOF) { // is.read() will fail for empty input streams
+            std::vector<char> empty_buffer;
+            process(ctx, empty_buffer, is.gcount(), true);
+            return final(ctx);
+        }
+
+        std::vector<char> buffer(CHUNK_SIZE);
+        while(is.read(buffer.data(), buffer.size())) { // Read in 4096 byte sized chunks from stream
+            process(ctx, buffer, is.gcount(), false);
+        }
+
+        /**
+         * InputSteam::read(data, size) attempts to read size bytes. 
+         * InputSteam::gcount returns the number of bytes left.
+         * Let's read the rest of the stream left over from the read operations.
+         */
+        if(is.gcount() > 0) { 
+            process(ctx, buffer, is.gcount(), true);
+        }
+
+        return final(ctx);
+    }
+
 }

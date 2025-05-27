@@ -9,40 +9,8 @@
 
 namespace hash::sha1 {
 
-    // This could be a macro to allow for compile time config for systems with small memory resources.
-    // (fsstream could read from disk)
-    // NOTE should prob assert that this chunk size is > block size
-    constexpr size_t CHUNK_SIZE = 1024;
-
     static std::string final(const Sha1_context ctx) {
         return utils::toString(ctx.H.data(), ctx.H.size());
-    }
-
-    template<typename InputStream>
-    static std::string hash_stream(InputStream& is) {
-        auto ctx = sha1::makeContext();
-
-        if (is.peek() == EOF) { // is.read() will fail for empty input streams
-            std::vector<char> empty_buffer;
-            process(ctx, empty_buffer, is.gcount(), true);
-            return final(ctx);
-        }
-
-        std::vector<char> buffer(CHUNK_SIZE);
-        while(is.read(buffer.data(), buffer.size())) { // Read in 4096 byte sized chunks from stream
-            process(ctx, buffer, is.gcount(), false);
-        }
-
-        /**
-         * InputSteam::read(data, size) attempts to read size bytes. 
-         * InputSteam::gcount returns the number of bytes left.
-         * Let's read the rest of the stream left over from the read operations.
-         */
-        if(is.gcount() > 0) { 
-            process(ctx, buffer, is.gcount(), true);
-        }
-
-        return final(ctx);
     }
 
     std::string hash_string(const std::string& data) {
