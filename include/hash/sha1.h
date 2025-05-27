@@ -3,6 +3,7 @@
 #include <memory>
 #include <sstream>
 #include <vector>
+#include <iomanip>
 
 #pragma once
 
@@ -45,7 +46,19 @@ namespace hash::sha1 {
     uint sha1_pad(std::vector<char>& buf, uint64_t message_end_pos, uint64_t message_len);
     std::shared_ptr<std::vector<uint32_t>> toMessageDigestBuffer(const std::vector<char>& padded_message, uint64_t padded_buffer_size);
     void process(Sha1_context& ctx, std::vector<char> data, size_t buffer_size, bool is_last_chunk);
-    static inline std::string final(const Sha1_context ctx);
+
+    static inline std::string final(const Sha1_context ctx) {
+        const uint32_t* data(ctx.H.data());
+        std::stringstream ss;
+        ss << std::hex << std::setfill('0'); // Set output to hexadecimal and pad with 0
+
+        for (size_t i = 0; i < ctx.H.size(); ++i) {
+            uint32_t val = data[i];
+            // Each uint32_t is 8 hex characters (4 bytes * 2 hex chars/byte)
+            ss << std::setw(8) << val;
+        }
+        return ss.str();
+    }
 
     template<typename InputStream>
     static std::string hash_stream(InputStream& is) {

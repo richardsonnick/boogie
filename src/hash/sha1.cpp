@@ -9,10 +9,6 @@
 
 namespace hash::sha1 {
 
-    static std::string final(const Sha1_context ctx) {
-        return utils::toString(ctx.H.data(), ctx.H.size());
-    }
-
     std::string hash_string(const std::string& data) {
         std::istringstream iss(data);
         return hash_stream(iss);
