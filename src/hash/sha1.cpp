@@ -35,9 +35,12 @@ namespace hash::sha1 {
     */
     uint sha1_pad(std::vector<char>& buf, uint64_t message_end_pos, uint64_t message_len) {
         message_len += message_end_pos; // We must add the characters that we have read in this chunk iteration
-        const size_t block_size = SHA1_BLOCK_LEN / utils::BYTE_LEN;
-        size_t resize_len = ((message_end_pos + block_size - 1) / block_size) * block_size;
+        constexpr size_t block_size = SHA1_BLOCK_LEN / utils::BYTE_LEN;
 
+        // The total length must be a multiple of block_size (64 bytes)
+        size_t min_len = message_end_pos + 1 + 8; // 1 for 0x80, 8 for length
+        // The total length must be a multiple of block_size (64 bytes or 512 bits)
+        size_t resize_len = ((min_len + block_size - 1) / block_size) * block_size;
 
         buf.resize(std::max(resize_len, block_size));
         assert(buf.size() % 64 == 0);

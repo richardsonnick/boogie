@@ -18,7 +18,8 @@ std::vector<std::pair<std::string, std::string>> test_vector = {
     {"dancing in the moonlight ", "97797368008ebd878b9635a429a98a52c9858c6a"},
     {"It's super natu ral deeeee light", "cfbe7cd40855a37a7e822d8c7f7104703a6aa172"},
     {"%#$@%@#$%^@#$%@#$%T%^TDSFASDFT$YG", "ab4ae308339dacf2e8a3de9361297b1022e544c5"},
-    {lorem, "2401ad54ef524c1a646f0a01ad0260f1c9b10017"}
+    {lorem, "2401ad54ef524c1a646f0a01ad0260f1c9b10017"},
+    {"100644 file1.txt\\0aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "0ce9914a2f60d7a0e3ffd189762d75a50ada490e"}
 };
 
 }
