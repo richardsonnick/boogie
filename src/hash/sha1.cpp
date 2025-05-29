@@ -1,11 +1,11 @@
-#include <hash/sha1.h>
 #include <iostream>
 #include <optional>
 #include <cassert>
-#include <sstream>
 #include <fstream>
 
 #include <util/utils.h>
+
+#include <hash/sha1.h>
 
 namespace hash::sha1 {
 
