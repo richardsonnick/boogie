@@ -44,12 +44,12 @@ namespace hash::sha1 {
     std::shared_ptr<std::vector<uint32_t>> toMessageDigestBuffer(const std::vector<char>& padded_message, uint64_t padded_buffer_size);
     void process(Sha1_context& ctx, std::vector<char> data, size_t buffer_size, bool is_last_chunk);
 
-    static inline std::string final(const Sha1_context ctx) {
-        const uint32_t* data(ctx.H.data());
+    static inline std::string to_hex(const std::array<uint32_t, 5>& raw_hash) {
+        const uint32_t* data(raw_hash.data());
         std::stringstream ss;
         ss << std::hex << std::setfill('0'); // Set output to hexadecimal and pad with 0
 
-        for (size_t i = 0; i < ctx.H.size(); ++i) {
+        for (size_t i = 0; i < raw_hash.size(); ++i) {
             uint32_t val = data[i];
             // Each uint32_t is 8 hex characters (4 bytes * 2 hex chars/byte)
             ss << std::setw(8) << val;
@@ -58,13 +58,13 @@ namespace hash::sha1 {
     }
 
     template<typename InputStream>
-    static std::string hash_stream(InputStream& is) {
+    static std::array<uint32_t, 5> hash_stream_raw(InputStream& is) {
         auto ctx = sha1::makeContext();
 
         if (is.peek() == EOF) { // is.read() will fail for empty input streams
             std::vector<char> empty_buffer;
             process(ctx, empty_buffer, is.gcount(), true);
-            return final(ctx);
+            return ctx.H;
         }
 
         std::vector<char> buffer(CHUNK_SIZE);
@@ -80,8 +80,13 @@ namespace hash::sha1 {
         if(is.gcount() > 0) { 
             process(ctx, buffer, is.gcount(), true);
         }
+        return ctx.H;
+    }
 
-        return final(ctx);
+    template<typename InputStream>
+    static std::string hash_stream(InputStream& is) {
+        std::array<uint32_t, 5> raw_hash = hash_stream_raw(is);
+        return to_hex(raw_hash);
     }
 
 }
