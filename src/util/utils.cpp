@@ -1,4 +1,5 @@
 #include <util/utils.h>
+#include <cstdint>
 #include <sstream>
 #include <iomanip>
 

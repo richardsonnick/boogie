@@ -2,6 +2,9 @@
 #include <optional>
 #include <cassert>
 #include <fstream>
+#include <array>
+#include <cstdint>
+#include <memory>
 
 #include <util/utils.h>
 

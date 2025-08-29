@@ -6,6 +6,7 @@
 #include <string>
 #include <sstream>
 #include <iomanip> // Required for std::hex, std::setfill, std::setw
+#include <cstdint>
 
 using Buffer = std::vector<uint8_t>;
 
