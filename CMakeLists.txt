@@ -16,8 +16,8 @@ set(CTEST_OUTPUT_ON_FAILURE ON)
 set(CMAKE_INSTALL_RPATH "/usr/local/lib") # TODO is this only needed on macos??
 
 ## LIBRARY SETUP
-add_library(boogielib SHARED src/hash/sha1.cpp src/util/utils.cpp
-  include/hash/sha1.h src/util/utils.h)
+add_library(boogielib SHARED src/hash/sha1.cpp src/hash/sha1_c.cpp src/util/utils.cpp
+  include/hash/sha1.h include/hash/sha1_c.h src/util/utils.h)
 target_include_directories(boogielib
   PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
