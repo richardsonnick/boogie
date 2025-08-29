@@ -13,10 +13,9 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=address -fno-omit-frame-point
 set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -fsanitize=address")
 set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -fsanitize=address")
 set(CTEST_OUTPUT_ON_FAILURE ON)
-set(CMAKE_INSTALL_RPATH "/usr/local/lib") # TODO is this only needed on macos??
 
 ## LIBRARY SETUP
-add_library(boogielib SHARED src/hash/sha1.cpp src/hash/sha1_c.cpp src/util/utils.cpp
+add_library(boogielib STATIC src/hash/sha1.cpp src/hash/sha1_c.cpp src/util/utils.cpp
   include/hash/sha1.h include/hash/sha1_c.h src/util/utils.h)
 target_include_directories(boogielib
   PUBLIC
