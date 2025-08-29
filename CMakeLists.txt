@@ -22,6 +22,7 @@ target_include_directories(boogielib
   PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
     $<INSTALL_INTERFACE:include>
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>
   PRIVATE src/util)
 target_compile_options(boogielib PRIVATE -Wall -Wextra -Wpedantic)
 install(TARGETS boogielib
